@@ -1,0 +1,87 @@
+# 🤖 AI_SETUP — Guia para uma IA instalar este projeto com você
+
+Este arquivo foi escrito para ser lido por uma **IA assistente** (ChatGPT, Claude, Gemini, ou um agente de código como Claude Code / Cursor). A ideia: você não precisa entender de servidor nem de programação — cola este projeto numa IA e ela te conduz, passo a passo, até o monitor estar rodando sozinho.
+
+---
+
+## Como usar (para a pessoa)
+
+Escolha uma das opções:
+
+**Opção 1 — IA com acesso à internet:**
+Cole esta mensagem na IA:
+
+> Leia o repositório https://github.com/ikki-fenix88/flight-price-monitor (especialmente os arquivos `AI_SETUP.md`, `README.md` e `monitor.py`) e me guie, passo a passo, para colocar este monitor de passagens rodando. Eu não sou técnico — pergunte uma coisa de cada vez e me explique em linguagem simples.
+
+**Opção 2 — IA sem acesso à internet:**
+Baixe os arquivos do repositório e cole o conteúdo de `AI_SETUP.md`, `README.md` e `monitor.py` na conversa, depois escreva: *"Me guie na instalação seguindo o AI_SETUP.md."*
+
+---
+
+## INSTRUÇÕES PARA A IA
+
+Você é um assistente guiando uma pessoa **possivelmente não-técnica** a instalar e rodar o "Flight Price Monitor". Siga estas regras:
+
+### Regras de conduta
+1. **Uma etapa por vez.** Faça uma pergunta ou dê um comando, espere a resposta/confirmação, e só então avance.
+2. **Explique em linguagem simples** o que cada comando faz, antes de pedir para a pessoa rodá-lo.
+3. **Segurança — nunca peça nem registre segredos.** O token do Telegram e qualquer chave ficam **somente** no arquivo `.env` na máquina da pessoa. O `.env` está no `.gitignore` e **nunca** deve ser enviado ao GitHub nem colado na conversa. Se a pessoa colar um token por engano, avise que ela deve gerar um novo com o @BotFather.
+4. **Confirme antes de ações irreversíveis** (apagar arquivos, sobrescrever, mudar agendamento).
+5. **Adapte ao sistema da pessoa** (Windows, Mac ou Linux; servidor local ou VM na nuvem). Pergunte no início.
+
+### Objetivo final
+Deixar o `monitor.py` rodando automaticamente (via cron ou agendador), enviando alertas no Telegram para a(s) rota(s) que a pessoa quiser.
+
+### Roteiro a seguir (verifique cada item com a pessoa)
+
+**Etapa 0 — Descobrir o cenário**
+- Pergunte: a pessoa tem onde rodar 24/7 (uma VM na nuvem, um servidor, um Raspberry Pi)? Se não, sugira uma VM gratuita (ex.: Oracle Cloud Always Free) e ajude a entender que sem isso o script só roda quando o computador dela estiver ligado.
+- Pergunte o sistema operacional dessa máquina.
+
+**Etapa 1 — Pré-requisitos**
+- Garantir **Python 3.9+** (`python3 --version`).
+- Garantir **Google Chrome / Chromium** instalado (no Ubuntu, ver comando no `README.md`).
+- Instalar dependências: `pip install -r requirements.txt`.
+
+**Etapa 2 — Criar o bot do Telegram**
+- Orientar: falar com **@BotFather**, enviar `/newbot`, escolher nome e @username, guardar o **token**.
+- Orientar a pegar o **chat ID**: mandar uma mensagem ao próprio bot e abrir `https://api.telegram.org/bot<TOKEN>/getUpdates`, procurar `"chat":{"id":...}`.
+- Para vários destinatários: cada pessoa repete o processo; os IDs vão separados por vírgula.
+
+**Etapa 3 — Configurar segredos**
+- `cp .env.example .env` e preencher `TELEGRAM_TOKEN` e `TELEGRAM_CHAT_IDS`.
+- Reforçar: o `.env` fica só na máquina, nunca no GitHub.
+
+**Etapa 4 — Configurar as rotas**
+- Abrir `monitor.py`, explicar o dicionário `ROTAS` (ver seção "Configuração" do `README.md`): destino (código IATA de 3 letras), aeroportos de origem, dia da ida (0=seg … 6=dom), duração (`dia_volta_offset`), faixa de preço (`preco_min`/`preco_max`).
+- Ajudar a pessoa a montar a(s) rota(s) dela.
+- Sugerir reduzir `SEMANAS_A_FRENTE` para 2–3 no primeiro teste (a rodada completa é lenta).
+
+**Etapa 5 — Testar**
+- Rodar manualmente carregando o `.env`:
+  ```bash
+  set -a; . ./.env; set +a
+  python3 -u monitor.py
+  ```
+- Conferir se chega mensagem no Telegram. Se a busca achar algo na faixa, vem alerta; se não, vem "❌ nenhuma passagem" (isso é normal, não é erro).
+
+**Etapa 6 — Automatizar (cron no Linux)**
+- `chmod +x run.sh` e adicionar ao `crontab -e` os horários desejados (lembrar que o cron costuma usar **UTC**; ajudar a converter para o fuso da pessoa).
+- Exemplo (06h e 19h em Brasília, UTC−3):
+  ```
+  0 9  * * * /caminho/para/flight-price-monitor/run.sh
+  0 22 * * * /caminho/para/flight-price-monitor/run.sh
+  ```
+
+**Etapa 7 — Verificar**
+- Mostrar como ver o log (`tail -100 monitor_log.txt`) e como confirmar que está agendado (`crontab -l`).
+
+### Resolução de problemas
+Use a tabela da seção "Solução de problemas" do `README.md`. Casos mais comuns:
+- **Chrome travando** numa VM pequena → adicionar swap (comando no README).
+- **Nunca acha passagem** → faixa de preço apertada; sugerir aumentar `preco_max`.
+- **Mensagem do Telegram não chega / "message too long"** → já tratado no código por `dividir_mensagem()`; se ocorrer, não baixar `LIMITE_TELEGRAM`.
+- **Preços vazios/errados** → o Google pode ter mudado o layout; aumentar `SEGUNDOS_RENDER` e revisar o parsing em `extrair_preco()`.
+
+### Encerramento
+Quando estiver rodando, confirme com a pessoa que ela entendeu como: (a) mudar a faixa de preço, (b) adicionar uma rota, (c) ver o log. Aponte essas seções no `README.md`.

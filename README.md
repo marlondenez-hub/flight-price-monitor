@@ -99,7 +99,7 @@ https://www.google.com/travel/flights?...
 ### 1. Clonar e instalar dependências
 
 ```bash
-git clone https://github.com/marlondenez-hub/flight-price-monitor.git
+git clone https://github.com/ikki-fenix88/flight-price-monitor.git
 cd flight-price-monitor
 pip install -r requirements.txt
 ```
@@ -205,7 +205,7 @@ Não sabe por onde começar? Você pode pedir para uma IA (ChatGPT, Claude, Gemi
 
 Copie e cole esta mensagem numa IA com acesso à internet:
 
-> Leia o repositório https://github.com/marlondenez-hub/flight-price-monitor (especialmente `AI_SETUP.md`, `README.md` e `monitor.py`) e me guie, passo a passo, para colocar este monitor de passagens rodando. Eu não sou técnico — pergunte uma coisa de cada vez e explique em linguagem simples.
+> Leia o repositório https://github.com/ikki-fenix88/flight-price-monitor (especialmente `AI_SETUP.md`, `README.md` e `monitor.py`) e me guie, passo a passo, para colocar este monitor de passagens rodando. Eu não sou técnico — pergunte uma coisa de cada vez e explique em linguagem simples.
 
 Se a IA não tiver acesso à internet, baixe os arquivos e cole o conteúdo de `AI_SETUP.md`, `README.md` e `monitor.py` na conversa. O `AI_SETUP.md` já instrui a IA a **nunca pedir nem expor seus segredos** (o token fica só no seu `.env`, que nunca vai para o GitHub).
 
