@@ -16,6 +16,7 @@ Feito para quem viaja sempre nas mesmas rotas (ex.: voltar pra casa no fim de se
 - [Configuração](#-configuração)
 - [Como rodar](#-como-rodar)
 - [Agendar (rodar sozinho)](#-agendar-rodar-sozinho)
+- [Instalar com ajuda de uma IA](#-instalar-com-ajuda-de-uma-ia)
 - [Estrutura do projeto](#-estrutura-do-projeto)
 - [Como funciona por dentro](#-como-funciona-por-dentro)
 - [Solução de problemas](#-solução-de-problemas)
@@ -198,6 +199,18 @@ Adicione (exemplo: 06h e 19h todo dia):
 
 ---
 
+## 🤖 Instalar com ajuda de uma IA
+
+Não sabe por onde começar? Você pode pedir para uma IA (ChatGPT, Claude, Gemini) te guiar do zero. O repositório inclui o arquivo **[`AI_SETUP.md`](AI_SETUP.md)**, escrito justamente para a IA ler e te conduzir passo a passo, em linguagem simples.
+
+Copie e cole esta mensagem numa IA com acesso à internet:
+
+> Leia o repositório https://github.com/marlondenez-hub/flight-price-monitor (especialmente `AI_SETUP.md`, `README.md` e `monitor.py`) e me guie, passo a passo, para colocar este monitor de passagens rodando. Eu não sou técnico — pergunte uma coisa de cada vez e explique em linguagem simples.
+
+Se a IA não tiver acesso à internet, baixe os arquivos e cole o conteúdo de `AI_SETUP.md`, `README.md` e `monitor.py` na conversa. O `AI_SETUP.md` já instrui a IA a **nunca pedir nem expor seus segredos** (o token fica só no seu `.env`, que nunca vai para o GitHub).
+
+---
+
 ## 📁 Estrutura do projeto
 
 ```
@@ -207,6 +220,8 @@ flight-price-monitor/
 ├── requirements.txt    # dependências Python
 ├── .env.example        # modelo de configuração de segredos
 ├── .gitignore          # ignora .env, chaves e logs
+├── AI_SETUP.md         # guia para uma IA te instalar passo a passo
+├── LICENSE             # licença MIT
 └── README.md           # este arquivo
 ```
 
